@@ -83,7 +83,7 @@ tokio = { version = "1.15.0", features = ["full"] }
 tokio-stream = { version = "0.1.8", features = ["sync", "time"] }
 tokio-util = { version = "0.6.9", features = ["codec"] }
 bounded-integer = { version = "^0.5", features = ["types"] }
-url = "~2.2"
+url = "2.5.4"
 getrandom = { version = "0.2.7" }
 itertools = { version = "0.10.3", default-features = false }
 miette = { version = "5", features = ["fancy"] }

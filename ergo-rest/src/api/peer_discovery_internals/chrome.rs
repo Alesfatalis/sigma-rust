@@ -395,7 +395,7 @@ fn spawn_http_request_task_chrome(
                     url.set_port(Some(9053)).unwrap();
                     #[allow(clippy::unwrap_used)]
                     let node_conf = NodeConf {
-                        addr: PeerAddr(url.socket_addrs(|| Some(9053)).unwrap()[0]),
+                        addr: PeerAddr::try_from(&url).unwrap(),
                         api_key: None,
                         timeout: Some(request_timeout_duration),
                     };

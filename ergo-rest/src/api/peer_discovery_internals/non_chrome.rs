@@ -15,7 +15,7 @@
 //!  \----------------------/                   \----------------------/
 //!              ^                                                  |
 //!              |__________________________________________________|
-//!                <active node| non-active node| list of peers>   
+//!                <active node| non-active node| list of peers>
 //! ```
 use super::PeerDiscoverySettings;
 use crate::api::peer_discovery_internals::get_peers_all;
@@ -292,7 +292,7 @@ fn spawn_http_request_task<
                     url.set_port(Some(9053)).unwrap();
                     #[allow(clippy::unwrap_used)]
                     let node_conf = NodeConf {
-                        addr: PeerAddr(url.socket_addrs(|| Some(9053)).unwrap()[0]),
+                        addr: PeerAddr::try_from(&url).unwrap(),
                         api_key: None,
                         timeout: Some(request_timeout_duration),
                     };
