@@ -126,7 +126,7 @@ impl Gf2_192Poly {
         res
     }
 
-    /// Returns Vec<u8> consisting of the concatenation of all the coefficients of the polynomial
+    /// Returns `Vec<u8>` consisting of the concatenation of all the coefficients of the polynomial
     /// NOT including the degree-zero coefficient. Each coefficient takes 24 bytes for a total of
     /// `self.degree * 24` bytes
     pub fn to_bytes(&self) -> Vec<u8> {
