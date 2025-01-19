@@ -32,6 +32,29 @@ impl PeerAddr {
     }
 }
 
+impl TryFrom<&Url> for PeerAddr {
+    type Error = std::io::Error;
+    fn try_from(url: &Url) -> Result<Self, Self::Error> {
+        // Based on url.socket_addrs, this will not work on wasm32-unknown-unknown if the url is a domain since that lacks DNS operations
+        use std::net::ToSocketAddrs;
+        fn io_result<T>(opt: Option<T>, message: &str) -> std::io::Result<T> {
+            opt.ok_or_else(|| std::io::Error::new(std::io::ErrorKind::InvalidData, message))
+        }
+
+        let host = io_result(url.host(), "No host name in the URL")?;
+        let port = url.port_or_known_default().unwrap_or(9053);
+
+        Ok(match host {
+            url::Host::Domain(domain) => PeerAddr(io_result(
+                (domain, port).to_socket_addrs()?.nth(0),
+                "Could not resolve domain",
+            )?),
+            url::Host::Ipv4(ip) => PeerAddr((ip, port).into()),
+            url::Host::Ipv6(ip) => PeerAddr((ip, port).into()),
+        })
+    }
+}
+
 impl ScorexSerializable for PeerAddr {
     fn scorex_serialize<W: sigma_ser::vlq_encode::WriteSigmaVlqExt>(
         &self,

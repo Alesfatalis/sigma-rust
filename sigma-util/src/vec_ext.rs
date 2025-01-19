@@ -4,9 +4,9 @@ use alloc::sync::Arc;
 
 use alloc::vec::Vec;
 
-/// Vec<i8> to Vec<u8> conversion
+/// `Vec<i8>` to `Vec<u8>` conversion
 pub trait FromVecI8 {
-    /// Convert Vec<i8> to Vec<u8>
+    /// Convert `Vec<i8>` to `Vec<u8>`
     fn from_vec_i8(bs: Vec<i8>) -> Self;
 }
 
@@ -21,9 +21,9 @@ impl FromVecI8 for Arc<[u8]> {
     }
 }
 
-/// Convert Vec<i8> to Vec<u8>
+/// Convert `Vec<i8>` to `Vec<u8>`
 pub trait AsVecU8 {
-    /// Returns Vec<u8>
+    /// Returns `Vec<u8>`
     fn as_vec_u8(&self) -> Vec<u8>;
 }
 
@@ -39,9 +39,9 @@ impl AsVecU8 for Arc<[i8]> {
         Vec::<u8>::from_vec_i8(self.iter().copied().collect())
     }
 }
-/// Convert Vec<u8> to Vec<i8>
+/// Convert `Vec<u8>` to `Vec<i8>`
 pub trait AsVecI8 {
-    /// Returns Vec<i8>
+    /// Returns `Vec<i8>`
     fn as_vec_i8(&self) -> Vec<i8>;
 }
 

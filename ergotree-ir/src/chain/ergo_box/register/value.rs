@@ -16,7 +16,7 @@ pub enum RegisterValue {
     /// Constant value
     Parsed(Constant),
     /// Parsed evaluated Tuple expression
-    /// see https://github.com/ergoplatform/sigma-rust/issues/700
+    /// see <https://github.com/ergoplatform/sigma-rust/issues/700>
     ParsedTupleExpr(EvaluatedTuple),
     /// Unparseable bytes
     Invalid {
@@ -28,7 +28,7 @@ pub enum RegisterValue {
 }
 
 /// Ensures that tuple only contains Constant values
-/// see https://github.com/ergoplatform/sigma-rust/issues/700
+/// see <https://github.com/ergoplatform/sigma-rust/issues/700>
 #[derive(PartialEq, Eq, Debug, Clone, From)]
 pub struct EvaluatedTuple {
     tuple: Tuple,

@@ -27,8 +27,9 @@ jobs:
       - name: Build ergo-lib
         uses: actions-rs/cargo@v1
         with:
+          use-cross: true
           command: rustc
-          args: --no-default-features --manifest-path ergo-lib/Cargo.toml --crate-type rlib
+          args: --target thumbv7m-none-eabi --no-default-features --manifest-path ergo-lib/Cargo.toml --crate-type rlib
 
   test:
     name: Tests on ${{ matrix.os }}
@@ -224,7 +225,7 @@ jobs:
           - 9053:9053
 
     steps:
-      - uses: fwal/setup-swift@v1
+      - uses: fwal/setup-swift@v2
       - name: checkout
         uses: actions/checkout@v2
 
@@ -253,10 +254,15 @@ jobs:
 
   android_tests:
     name: Test JNI(Android) bindings
-    runs-on: macos-12
+    runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v2
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
 
       - uses: actions-rs/toolchain@v1
         with:

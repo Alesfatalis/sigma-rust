@@ -42,7 +42,7 @@ impl<const N: usize> Digest<N> {
         Digest([0u8; N])
     }
 
-    /// Parse Digest<N> from base64 encoded string
+    /// Parse `Digest<N>` from base64 encoded string
     pub fn from_base64(s: &str) -> Result<Digest<N>, DigestNError> {
         let bytes = base64::decode(s)?;
         let arr: [u8; N] = bytes.as_slice().try_into()?;
