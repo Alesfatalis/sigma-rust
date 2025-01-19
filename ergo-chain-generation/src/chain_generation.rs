@@ -202,10 +202,7 @@ fn prove_block(
     let x = DlogProverInput::random();
     let x_bigint = BigInt::from_bytes_be(Sign::Plus, &x.to_bytes());
 
-    use byteorder::{BigEndian, WriteBytesExt};
-    let mut height_bytes = Vec::with_capacity(4);
-    #[allow(clippy::unwrap_used)]
-    height_bytes.write_u32::<BigEndian>(header.height).unwrap();
+    let height_bytes = header.height.to_be_bytes();
     let popow_algos = ergo_nipopow::NipopowAlgos::default();
     let big_n = popow_algos.pow_scheme.calc_big_n(version, height);
 
@@ -217,11 +214,7 @@ fn prove_block(
     let p1 = sk.public_image_bytes().unwrap();
     let p2 = x.public_image().h.sigma_serialize_bytes().unwrap();
     for i in min_nonce..max_nonce {
-        let nonce = {
-            let mut bytes = vec![];
-            bytes.write_i64::<BigEndian>(i).unwrap();
-            bytes
-        };
+        let nonce = i.to_be_bytes();
         let seed_hash = if version == 1 {
             let mut seed = msg.clone();
             seed.extend(&nonce);
@@ -238,8 +231,7 @@ fn prove_block(
             .gen_indexes(&seed_hash, big_n)
             .into_iter()
             .map(|ix| {
-                let mut index_bytes = vec![];
-                index_bytes.write_u32::<BigEndian>(ix).unwrap();
+                let index_bytes = ix.to_be_bytes();
                 generate_element(version, &msg, &p1, &p2, &index_bytes, &height_bytes)
             })
             .fold(BigInt::from(0_u8), |acc, e| acc + e);
@@ -253,7 +245,7 @@ fn prove_block(
             let autolykos_solution = AutolykosSolution {
                 miner_pk: sk.public_key().unwrap().public_key.into(),
                 pow_onetime_pk: Some(x.public_image().h),
-                nonce,
+                nonce: nonce.to_vec(),
                 pow_distance: Some(d),
             };
             // Compute header ID

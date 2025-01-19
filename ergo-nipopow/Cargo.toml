@@ -14,7 +14,6 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 base16 = { workspace = true }
 bounded-integer = { workspace = true }
-byteorder = { workspace = true }
 thiserror = { workspace = true }
 derive_more = { workspace = true }
 ergotree-ir = { workspace = true, features = ["json"] }

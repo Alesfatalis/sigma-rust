@@ -10,7 +10,6 @@ edition.workspace = true
 [dependencies]
 base16 = { workspace = true }
 blake2 = { workspace = true }
-byteorder = { workspace = true }
 ergo-lib = { workspace = true }
 num-bigint = { workspace = true }
 rand = { workspace = true }

@@ -77,7 +77,6 @@ serde_with = { version = "3.11.0", default-features = false, features = [
 ] }
 rand = "0.8.5"
 bytes = { version = "1.1", default-features = false }
-byteorder = "1"
 futures = "0.3"
 tokio = { version = "1.15.0", features = ["full"] }
 tokio-stream = { version = "0.1.8", features = ["sync", "time"] }
