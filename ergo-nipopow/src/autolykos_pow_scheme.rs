@@ -37,13 +37,10 @@ impl AutolykosPowScheme {
                 .cloned()
                 .ok_or(AutolykosPowSchemeError::MissingPowDistanceParameter)
         } else {
-            use byteorder::{BigEndian, WriteBytesExt};
             // hit for version 2
             let msg = blake2b256_hash(&header.serialize_without_pow()?).to_vec();
             let nonce = header.autolykos_solution.nonce.clone();
-            let mut height_bytes = Vec::with_capacity(4);
-            #[allow(clippy::unwrap_used)]
-            height_bytes.write_u32::<BigEndian>(header.height).unwrap();
+            let height_bytes = header.height.to_be_bytes();
 
             let mut concat = msg.clone();
             concat.extend(&nonce);
@@ -56,8 +53,7 @@ impl AutolykosPowScheme {
             let f2 = indexes.into_iter().fold(BigInt::from(0u32), |acc, idx| {
                 // This is specific to autolykos v2.
                 let mut concat = vec![];
-                #[allow(clippy::unwrap_used)]
-                concat.write_u32::<BigEndian>(idx).unwrap();
+                concat.extend_from_slice(&idx.to_be_bytes());
                 concat.extend(&height_bytes);
                 concat.extend(&self.calc_big_m());
                 acc + BigInt::from_bytes_be(Sign::Plus, &blake2b256_hash(&concat)[1..])
@@ -72,15 +68,7 @@ impl AutolykosPowScheme {
 
     /// Constant data to be added to hash function to increase its calculation time
     pub fn calc_big_m(&self) -> Vec<u8> {
-        use byteorder::{BigEndian, WriteBytesExt};
-        (0u64..1024)
-            .flat_map(|x| {
-                let mut bytes = Vec::with_capacity(8);
-                #[allow(clippy::unwrap_used)]
-                bytes.write_u64::<BigEndian>(x).unwrap();
-                bytes
-            })
-            .collect()
+        (0u64..1024).flat_map(|x| x.to_be_bytes()).collect()
     }
 
     /// Computes `J` (denoted by `seed` in Ergo implementation) line 4, algorithm 1 of Autolykos v2
